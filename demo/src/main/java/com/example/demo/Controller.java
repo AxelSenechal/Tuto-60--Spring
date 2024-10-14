@@ -1,7 +1,10 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +57,18 @@ public class Controller {
             // Handle the case where the student is not found
             throw new RuntimeException("Student not found with id " + id);
         }
+    }
+
+    @GetMapping("create")
+    public Student createStudent( @RequestParam(value = "name", defaultValue = "unknown") String name, @RequestParam(value = "lastname", defaultValue = "unknown") String lastname) throws NotFoundException {
+        Student student = new Student(name, lastname);
+        return studentRepository.save(student);
+    }
+
+    @GetMapping("/createStudent")
+    public Student createStudentFromUrl(@RequestParam String name, @RequestParam String lastname) {
+        Student student = new Student(name, lastname);
+        return studentRepository.save(student);
     }
 
     @DeleteMapping("/users/{id}")
